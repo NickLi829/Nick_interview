@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <title>Cyber City Comics</title>
+
+</head>
+<body>
+	<span id="background"></span>
+	<div id="page">
+		<div id="sidebar">
+			<div id="logo">
+				<a href="index.html">The selected works of <em>Cyber City Comics Online</em></a>
+			</div> <!-- /#logo -->
+			<ul id="navigation">
+				<li><a href="">About</a></li>
+				<li class="selected"><a href="">Illustrations</a></li>
+				<li><a href="">Selected Images</a></li>
+				<li><a href="">Contact Us</a></li>
+				<li><a href="">Blog</a></li>
+			</ul> <!-- /#navigation -->
+			
+			<div class="footer">
+				&copy; Copyright &copy; 1990.<br/>
+				<a href="index.html">Cyber City Comics</a> all rights reserved.
+			</div> <!-- /.footer -->
+		</div> <!-- /#sidebar -->
+		
+		<div id="contents">
+			<span class="header"></span>
+			<div class = "changeP">
+				<a id="prev_top">perv</a>  <a id="rand_top">random</a> <a id="next_top">next</a>
+			</div>
+			<div>
+			<p id="comicViewCount"></p>
+				<img id="comicImg" src="">
+				<p id="comicDesc">Image alt placeholder</p>
+			<p id="comicDate">Image date placeholder</p>
+			</div>
+		
+			<div class = "changeP">
+				<a id="prev_bottom">perv</a>  <a id="rand_bottom">random</a> <a id="next_bottom">next</a>
+			</div>
+		
+			
+		</div> <!-- /#contents -->
+	</div> <!-- /#page -->
+
+
+  
+
+<script type="text/javascript">
+
+// This gets the comic number, e.g. for "example.com/233" we are extracting "233" from it
+var currentPage = window.location.href;
+
+let currentComic = 0;
+
+const splits = currentPage.split('/');
+
+if (!isNaN(splits[splits.length - 1])) {
+    currentComic = Number(splits[splits.length - 1]);
+}
+
+// There's a maximum of 2529 images on xkcd.com
+// We set the link for all buttons
+// There's special rule for previous button at 1st comic and next button at last comic
+if (currentComic == 0) {
+	document.getElementById("prev_top").href = '#';
+	document.getElementById("prev_bottom").href = '#';
+	document.getElementById("next_top").href = "/1";
+	document.getElementById("next_bottom").href = "/1";
+} else if (currentComic == 2529) {
+	document.getElementById("prev_top").href = "/2528";
+	document.getElementById("prev_bottom").href = "/2528";
+	document.getElementById("next_top").href = '#';
+	document.getElementById("next_bottom").href = '#';
+} else {
+	document.getElementById("prev_top").href = `/${currentComic - 1}`;
+	document.getElementById("prev_bottom").href = `/${currentComic - 1}`;
+	document.getElementById("next_top").href = `/${currentComic + 1}`;
+	document.getElementById("next_bottom").href = `/${currentComic + 1}`;
+}
+
+// We can get a random comic between 1 and 2529 here
+const randVal = Math.floor(Math.random(1) * 2529);
+document.getElementById("rand_top").href = `/${randVal}`;
+document.getElementById("rand_bottom").href = `/${randVal}`;
+
+// This fetch the comic information from backend
+// Here we are using the comic image source, transcript and date
+fetch(`/getComic/${currentComic}`)
+.then(response => response.json())
+.then(data => {
+	console.log(data)
+	
+	document.getElementById("comicImg").src = data.img;
+	document.getElementById("comicDesc").innerText = data.transcript;
+	document.getElementById("comicDate").innerText = `${data.year}-${data.month}-${data.day}`;
+}
+);
+
+// This fetch how many times this comic has been viewed
+// and change the value of the corresponding p tag
+fetch(`/comicCount/${currentComic}`)
+	.then(response => response.json())
+	.then(data => {
+		document.getElementById("comicViewCount").innerText = `This comic has been viewed ${data.count} time(s)`;
+	});
+
+</script>
+
+<style>
+html {
+	font-family: Arial, Helvetica, sans-serif;
+}
+body {
+	background: url(../images/bg-body.jpg) repeat;
+	margin: 0;
+}
+img {
+	border: 0;
+}
+#background {
+	background-color: #050404;
+	display: block;
+	height: 1440px;
+	width: 50%;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+#page {
+	background: url(../images/bg-page.jpg) repeat-y left top;
+	width: 960px;
+	margin: 0 auto;
+	position: relative;
+}
+
+#connect .facebook, #connect .twitter, #connect .link-us {
+	background: url(../images/icons.gif) no-repeat;
+}
+#contents span.header, #contents h3, #contents ul li, #contents div.blogs span {
+	background: url(../images/interface.gif) no-repeat;
+}
+
+
+#sidebar {
+	float: left;
+	color: #ebebeb;
+	height: 100%;
+	width: 260px;
+	padding-left: 5px;
+}
+#sidebar ul {
+	list-style-type: none;
+	margin: 0 0 60px;
+	padding: 0;	
+	text-align: left;
+}
+#sidebar a {
+	color: #ebebeb;
+	text-decoration: none;
+}
+
+#logo {
+	line-height: 20px;
+	margin: 0 0 60px;
+}
+#logo a {
+	background: url(../images/logo.jpg) no-repeat right top;
+	color: #be1010;
+	display: block;
+	font-size: 14px;
+	width: 209px;
+	padding: 159px 25px 25px;
+	text-align: center;
+}
+#logo a em {
+	font-size: 16px;
+}
+
+#navigation li {
+	font-size: 19px;
+	line-height: 40px;
+}
+#navigation li a {
+	display: block;
+	width: 259px;
+	text-transform: uppercase;
+}
+#navigation li.selected a, #navigation li a:hover {
+	background: url(../images/menu-selected.gif) no-repeat 190px center;
+}
+
+#connect {
+	display: inline-block;
+}
+#connect li {
+	float: left;
+	width: 85px;
+	text-align: center;
+}
+#connect li a {
+	display: block;
+	height: 36px;
+	margin: 0 auto;
+}
+#connect .facebook {
+	background-position: 0 0;
+	width: 40px;
+}
+#connect .twitter {
+	background-position: 0 -47px;
+	width: 46px;
+}
+#connect .link-us {
+	background-position: 0 -94px;
+	width: 40px;
+}
+
+#sidebar .footer {
+	font-size: 12px;
+	line-height: 20px;
+	text-align: center;
+}
+
+#contents {
+	min-height: 1380px;
+	width: 690px;
+	margin: 0 0 0 264px;
+	padding-left: 20%;
+	padding-top: 60px;
+}
+#contents span.header {
+	background-position: 0 -224px;
+	display: block;
+	height: 47px;
+	width: 644px;
+	margin: 0 auto 13px;
+}
+#contents h3 {
+	background-position: 0 -154px;
+	color: #ebebeb;
+	font-weight: normal;
+	height: 27px;
+	width: 596px;
+	margin: 0 auto;
+	padding: 18px 8px 15px;
+	text-transform: uppercase;
+}
+#contents div {
+	width: 612px;
+	margin: 0 auto;
+	padding: 0 0 20px 20px;
+}
+#contents div a {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #050404;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 18px;
+  padding: 20px;
+  width: 80px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+  vertical-align:middle;
+	
+}
+
+#contents div a span  {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+#contents div a span:after {
+  content: '?';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;  
+	
+}
+#contents div a:hover span {
+	padding-right: 25px;
+}
+#contents div a:hover span:after {
+  opacity: 1;
+  right: 0;
+	
+}
+
+#contents div p {
+	font-size: 13px;
+	line-height: 20px;
+	margin: 20px 0 19px;
+	padding: 0 0 20px;
+}
+
+/** IE6 **/
+#background {
+	_height: 1440px;
+}
+
+#sidebar {
+	_height: 1440px;
+}
+
+</style>
+
+</body>
+</html>
