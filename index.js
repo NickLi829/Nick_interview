@@ -11,11 +11,11 @@ let comicCounter = {};
 
 // The following 2 routes just serves the page, the page itself will determine its current comic and button link etc
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/index.html/'));
+    res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 router.get('/:comicID', (req, res) => {
-    res.sendFile(path.join(__dirname + '/index.html/'));
+    res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 // Since we cannot fetch this website from frontend given cors issue therefore we have to fetch it from the backend and have the frontend fetch it from the backend
