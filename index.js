@@ -1,3 +1,4 @@
+var PORT = process.env.PORT || 3001;
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
@@ -38,4 +39,4 @@ router.get('/comicCount/:comicID', (req, res) => {
 });
 
 app.use('/', router);
-app.listen(process.env.PORT || 3001);
+app.listen(PORT);
